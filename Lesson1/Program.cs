@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Svetliakov.Models;
+using Lesson1.Models;
 
-namespace Svetliakov
+namespace Lesson1
 {
     class Program
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Svetliakov.Models;
+using Lesson1.Models;
 
-namespace Svetliakov.Models
+namespace Lesson1.Models
 {
     /// <summary>
     /// Резервуар

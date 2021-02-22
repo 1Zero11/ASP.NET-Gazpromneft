@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Svetliakov.Models;
+using Lesson1.Models;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.IO;
 
-namespace Svetliakov
+namespace Lesson1
 {
     public static class Routing
     {
@@ -66,14 +66,18 @@ namespace Svetliakov
 
                     Factory factory = DBManager.FindFactoryByName(factories, readLine);
 
-                    string unitString = "";
-                    foreach (Unit u in factory.Units)
-                        unitString += u.Name + ", ";
-                    unitString = unitString.Remove(unitString.Length - 2);
 
-                    Console.WriteLine($"Найден завод {factory.Name}. Описание: {factory.Description}. Установки: {unitString}");
+                    if (factory != null)
+                    {
+                        string unitString = "";
+                        foreach (Unit u in factory.Units)
+                            unitString += u.Name + ", ";
+                        unitString = unitString.Remove(unitString.Length - 2);
 
-                    found = true;
+                        Console.WriteLine($"Найден завод {factory.Name}. Описание: {factory.Description}. Установки: {unitString}");
+
+                        found = true;
+                    }
                     break;
 
 
@@ -83,14 +87,17 @@ namespace Svetliakov
 
                     Unit unit = DBManager.FindUnitByName(units, readLine);
 
-                    string tankString = "";
-                    foreach (Tank t in unit.Tanks)
-                        tankString += t.Name + ", ";
-                    tankString = tankString.Remove(tankString.Length - 2);
+                    if (unit != null)
+                    {
+                        string tankString = "";
+                        foreach (Tank t in unit.Tanks)
+                            tankString += t.Name + ", ";
+                        tankString = tankString.Remove(tankString.Length - 2);
 
-                    Console.WriteLine($"Найдена установка {unit.Name}, принадлежащая заводу {unit.Factory.Name}. Резервуары: {tankString}");
+                        Console.WriteLine($"Найдена установка {unit.Name}, принадлежащая заводу {unit.Factory.Name}. Резервуары: {tankString}");
 
-                    found = true;
+                        found = true;
+                    }
                     break;
 
                 case "3":
@@ -99,10 +106,13 @@ namespace Svetliakov
 
                     Tank tank = DBManager.FindTankByName(tanks, readLine);
 
-                    Console.WriteLine($"Найден резервуар {tank.Name}, принадлежащий установке {tank.Unit.Name} и заводу {tank.Unit.Factory.Name}." +
-                                $" Загрузка: {tank.Volume}. Максимальная загрузка: {tank.MaxVolume}");
+                    if (tank != null)
+                    {
+                        Console.WriteLine($"Найден резервуар {tank.Name}, принадлежащий установке {tank.Unit.Name} и заводу {tank.Unit.Factory.Name}." +
+                                    $" Загрузка: {tank.Volume}. Максимальная загрузка: {tank.MaxVolume}");
 
-                    found = true;
+                        found = true;
+                    }
                     break;
             }
 

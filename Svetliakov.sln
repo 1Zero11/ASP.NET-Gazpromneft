@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson1", "Svetliakov\Lesson1.csproj", "{2D5C2B24-F7EA-430E-8072-3338CA1BB65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson1", "Lesson1\Lesson1.csproj", "{2D5C2B24-F7EA-430E-8072-3338CA1BB65D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTest1", "XUnitTest1\XUnitTest1.csproj", "{CB5CDDF6-E824-45F1-B712-04D949D385F5}"
 EndProject
