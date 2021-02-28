@@ -12,6 +12,7 @@ namespace DataLib
 {
     public static class SerializationManager
     {
+        public static string fileName;
         public static string Serialize()
         {
             //Пишем json в консоль и в файл
@@ -23,7 +24,7 @@ namespace DataLib
 
             string jsonString = JsonSerializer.Serialize(DBManager.factories, options);
 
-            File.WriteAllText(@".\text.json", jsonString);
+            File.WriteAllText(fileName, jsonString);
 
             return jsonString;
         }
@@ -39,7 +40,7 @@ namespace DataLib
 
         public static string GetJsonFromFile()
         {
-            string fileName = @".\text.json";
+            //string fileName = @".\bin\Debug\net5.0\text.json";
             return File.ReadAllText(fileName);
         }
     }

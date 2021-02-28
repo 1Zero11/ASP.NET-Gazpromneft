@@ -38,6 +38,7 @@ namespace Lesson1
                 }
                 else if (readLine == "2")
                 {
+                    SerializationManager.fileName = @".\bin\text.json";
                     TextManager.Show(new string[] { SerializationManager.Serialize() });
                 }
                 else if (readLine == "3")

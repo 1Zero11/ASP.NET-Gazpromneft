@@ -37,6 +37,7 @@ namespace Lesson2
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            SerializationManager.fileName = @".\bin\Debug\net5.0\text.json";
             DBManager.ClearConnections();
             DBManager.factories.AddRange(SerializationManager.Deserialise<DataLib.Models.Factory>(SerializationManager.GetJsonFromFile()));
             DBManager.UnloadToDB();
