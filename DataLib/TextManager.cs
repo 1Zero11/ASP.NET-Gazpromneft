@@ -1,47 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lesson1.Models;
+using DataLib.Models;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.IO;
+using System.Diagnostics;
 
-namespace Lesson1
+namespace DataLib
 {
-    public static class Routing
+    public static class TextManager
     {
-        public static void ShowInformation(Tank[] tanks, Unit[] units, Factory[] factories)
+        public static string[] Information()
         {
-            Console.WriteLine($"Количество {tanks.Length} резервуаров"); // должно быть 
+            List<string> output = new List<string>();
+            output.Add($"Количество {DBManager.tanks.Count} резервуаров"); // должно быть 
 
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in DBManager.tanks)
             {
-                var foundUnit = DBManager.FindUnitByName(units, tank.Unit.Name);
-                var factory = DBManager.FindFactory(factories, foundUnit);
+                Debug.WriteLine(tank.Name);
+                var foundUnit = DBManager.FindByName(DBManager.units, tank.Unit.Name);
+                var factory = DBManager.FindFactory(foundUnit);
 
-                Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+                output.Add($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
             }
 
-            var totalVolume = DBManager.GetTotalVolume(tanks);
-            Console.WriteLine($"Общий объем резервуаров: {totalVolume}");
+            var totalVolume = DBManager.GetTotalVolume();
+            output.Add($"Общий объем резервуаров: {totalVolume}");
+
+            return output.ToArray();
         }
 
-        public static void GenerateJson(Factory[] factories)
-        {
-            //Пишем json в консоль и в файл
-            var options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-                WriteIndented = true
-            };
-
-            string jsonString = JsonSerializer.Serialize(factories, options);
-
-            Console.WriteLine(jsonString);
-            File.WriteAllText(@".\text.json", jsonString);
-        }
+        
 
         public static void SearchDialog(Unit[] units, Tank[] tanks, Factory[] factories)
         {
@@ -64,7 +56,7 @@ namespace Lesson1
                     Console.WriteLine("Введите название завода");
                     readLine = Console.ReadLine();
 
-                    Factory factory = DBManager.FindFactoryByName(factories, readLine);
+                    Factory factory = DBManager.FindByName(factories, readLine);
 
 
                     if (factory != null)
@@ -85,7 +77,7 @@ namespace Lesson1
                     Console.WriteLine("Введите название установки");
                     readLine = Console.ReadLine();
 
-                    Unit unit = DBManager.FindUnitByName(units, readLine);
+                    Unit unit = DBManager.FindByName(units, readLine);
 
                     if (unit != null)
                     {
@@ -104,7 +96,7 @@ namespace Lesson1
                     Console.WriteLine("Введите название резервуара");
                     readLine = Console.ReadLine();
 
-                    Tank tank = DBManager.FindTankByName(tanks, readLine);
+                    Tank tank = DBManager.FindByName(tanks, readLine);
 
                     if (tank != null)
                     {
@@ -118,6 +110,12 @@ namespace Lesson1
 
             if (!found)
                 Console.WriteLine("Совпадений не найдено");
+        }
+
+        public static void Show(string[] str)
+        {
+            foreach (string s in str)
+                Console.WriteLine(s);
         }
     }
 }

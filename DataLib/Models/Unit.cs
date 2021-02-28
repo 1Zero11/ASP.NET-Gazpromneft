@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lesson1.Models;
+using DataLib.Models;
 
-namespace Lesson1.Models
+namespace DataLib.Models
 {
     /// <summary>
     /// Установка
@@ -16,20 +16,20 @@ namespace Lesson1.Models
     /// 
     /// Чтобы получилась строгая иерархия в json, сериализируем связи только в одну сторону (get set)
     /// </summary>
-    public class Unit
+    public class Unit : Item
     {
-
-
-        public string Name { get; set; }
         public int FactoryId { get; set; }
-        public Tank[] Tanks { get; set; }
+        public List<Tank> Tanks { get; set; }
 
         public Factory Factory;
 
-        public Unit(string name, int factoryId)
+        public Unit(int id, string name, int factoryId)
         {
+            Id = id;
             Name = name;
             FactoryId = factoryId;
         }
+
+        public Unit() { }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lesson1.Models;
+using DataLib.Models;
+using static DataLib.DBManager;
 
-namespace Lesson1.Models
+namespace DataLib.Models
 {
     /// <summary>
     /// Резервуар
@@ -15,24 +16,24 @@ namespace Lesson1.Models
     /// 
     /// Чтобы получилась строгая иерархия в json, сериализируем связи только в одну сторону (get set)
     /// </summary>
-    public class Tank
+    public class Tank : Item
     {
-        //..
-
-        public string Name { get; set; }
         public int Volume { get; set; }
         public int MaxVolume { get; set; }
         public int UnitId { get; set; }
 
         public Unit Unit;
 
-        public Tank(string name, int volume, int maxVolume, int unitId)
+        public Tank(int id, string name, int volume, int maxVolume, int unitId)
         {
+            Id = id;
             Name = name;
             Volume = volume;
             MaxVolume = maxVolume;
             UnitId = unitId;
         }
+
+        public Tank() { }
     }
 
 }

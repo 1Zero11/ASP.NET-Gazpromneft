@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DataLib;
+using System;
 using System.Collections.Generic;
-using Lesson1.Models;
 
 namespace Lesson1
 {
@@ -8,6 +8,10 @@ namespace Lesson1
     {
         static void Main(string[] args)
         {
+            var tanks = DBManager.GetTanks();
+            var units = DBManager.GetUnits();
+            var factories = DBManager.GetFactories();
+
             while (true) //Основной цикл
             {
                 Console.WriteLine("Доступные команды:");
@@ -22,27 +26,25 @@ namespace Lesson1
                 string readLine = Console.ReadLine();
                 Console.WriteLine();
 
-                var tanks = DBManager.GetTanks();
-                var units = DBManager.GetUnits();
-                var factories = DBManager.GetFactories();
+               
 
 
-                DBManager.Populate(factories, units, tanks); //Заполняем пустые объекты - создаём связи в обе стороны
+                DBManager.Populate(); //Заполняем пустые объекты - создаём связи в обе стороны
 
 
                 if (readLine == "1")
                 {
-                    Routing.ShowInformation(tanks, units, factories);
+                    TextManager.Show(TextManager.Information());
                 }
                 else if (readLine == "2")
                 {
-                    Routing.GenerateJson(factories);
+                    TextManager.Show(new string[] { SerializationManager.Serialize() });
                 }
                 else if (readLine == "3")
                 {
-                    Routing.SearchDialog(units, tanks, factories);
+                    TextManager.SearchDialog(units, tanks, factories);
                 }
-                else if (readLine == "4")
+                if (readLine == "4")
                     break;
                 
                 Console.WriteLine();
