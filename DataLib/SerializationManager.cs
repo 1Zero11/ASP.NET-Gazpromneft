@@ -10,10 +10,11 @@ using System.Text.Unicode;
 
 namespace DataLib
 {
-    public static class SerializationManager
+    public class SerializationManager
     {
-        public static string fileName;
-        public static string Serialize()
+        public string FileName;
+
+        public string Serialize(Factory[] factories)
         {
             //Пишем json в консоль и в файл
             var options = new JsonSerializerOptions
@@ -22,14 +23,19 @@ namespace DataLib
                 WriteIndented = true
             };
 
-            string jsonString = JsonSerializer.Serialize(DBManager.factories, options);
+            if (factories == null)
+            {
+                throw new NullReferenceException("Empty collection");
+            }
 
-            File.WriteAllText(fileName, jsonString);
+            string jsonString = JsonSerializer.Serialize(factories, options);
+
+            File.WriteAllText(FileName, jsonString);
 
             return jsonString;
         }
 
-        public static T[] Deserialise<T>(string jsonString)
+        public IReadOnlyCollection<T> Deserialise<T>(string jsonString)
         {
             //string fileName = @".\text.json";
             //string jsonString = File.ReadAllText(fileName);
@@ -38,10 +44,10 @@ namespace DataLib
             return facs;
         }
 
-        public static string GetJsonFromFile()
+        public string GetJsonFromFile()
         {
             //string fileName = @".\bin\Debug\net5.0\text.json";
-            return File.ReadAllText(fileName);
+            return File.ReadAllText(FileName);
         }
     }
 }

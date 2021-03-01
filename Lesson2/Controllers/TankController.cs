@@ -13,42 +13,59 @@ namespace Lesson2.Controllers
     [ApiController]
     public class TankController : ControllerBase
     {
+        private readonly SerializationManager serialManager;
+        private readonly DBManager dBManager;
+        public TankController(SerializationManager smanager, DBManager dbmanager)
+        {
+            serialManager = smanager;
+            dBManager = dbmanager;
+        }
+
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Tank[] Get()
         {
-            string[] output = TextManager.Information();
 
-            return output;
+            return dBManager.tanks.ToArray();
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
-        public string Get(string name)
+        public ActionResult<Tank> Get(string name)
         {
-            return DBManager.FindByName(DBManager.tanks, name).Volume.ToString();
+            try
+            {
+                return dBManager.FindByName(dBManager.tanks, name);
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e.Message);
+            }
+            
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Tank tank)
         {
-            DBManager.AddTank(SerializationManager.Deserialise<Tank>(value)[0]);
-            SerializationManager.Serialize();
+            dBManager.AddTank(tank);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public Tank Put(int id, [FromBody] Tank tank)
         {
+            return dBManager.ChangeTank(id, tank);
+
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
         public void Delete(string name)
         {
-            DBManager.DeleteTank(name);
-            SerializationManager.Serialize();
+            dBManager.DeleteTank(name);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
     }
 }

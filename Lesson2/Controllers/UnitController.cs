@@ -13,42 +13,59 @@ namespace Lesson2.Controllers
     [ApiController]
     public class UnitController : ControllerBase
     {
+
+        private readonly SerializationManager serialManager;
+        private readonly DBManager dBManager;
+        public UnitController(SerializationManager smanager, DBManager dbmanager)
+        {
+            serialManager = smanager;
+            dBManager = dbmanager;
+        }
+
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Unit[] Get()
         {
-            string[] output = TextManager.Information();
 
-            return output;
+            return dBManager.units.ToArray();
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
-        public string Get(string name)
+        public ActionResult<Unit> Get(string name)
         {
-            return DBManager.FindByName(DBManager.units, name).Name;
+            try
+            {
+                return dBManager.FindByName(dBManager.units, name);
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e.Message);
+            }
+            
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Unit unit)
         {
-            DBManager.AddUnit(SerializationManager.Deserialise<Unit>(value)[0]);
-            SerializationManager.Serialize();
+            dBManager.AddUnit(unit);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public Unit Put(int id, [FromBody] Unit unit)
         {
+            return dBManager.ChangeUnit(id, unit);
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
         public void Delete(string name)
         {
-            DBManager.DeleteUnit(name);
-            SerializationManager.Serialize();
+            dBManager.DeleteUnit(name);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
     }
 }

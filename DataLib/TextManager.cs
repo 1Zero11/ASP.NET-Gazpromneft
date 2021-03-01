@@ -11,31 +11,56 @@ using System.Diagnostics;
 
 namespace DataLib
 {
-    public static class TextManager
+    public  class TextManager
     {
-        public static string[] Information()
+        DBManager dbmanager = new DBManager();
+
+        public TextManager(DBManager manager)
+        {
+            dbmanager = manager;
+        }
+
+        public  string[] Information()
         {
             List<string> output = new List<string>();
-            output.Add($"Количество {DBManager.tanks.Count} резервуаров"); // должно быть 
+            output.Add($"Количество {dbmanager.tanks.Count} резервуаров"); // должно быть 
 
-            foreach (Tank tank in DBManager.tanks)
+            foreach (Tank tank in dbmanager.tanks)
             {
                 Debug.WriteLine(tank.Name);
-                var foundUnit = DBManager.FindByName(DBManager.units, tank.Unit.Name);
-                var factory = DBManager.FindFactory(foundUnit);
+                var foundUnit = dbmanager.FindByName(dbmanager.units, tank.Unit.Name);
+                var factory = dbmanager.FindFactory(foundUnit);
 
                 output.Add($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
             }
 
-            var totalVolume = DBManager.GetTotalVolume();
+            var totalVolume = dbmanager.GetTotalVolume();
             output.Add($"Общий объем резервуаров: {totalVolume}");
 
             return output.ToArray();
         }
 
-        
 
-        public static void SearchDialog(Unit[] units, Tank[] tanks, Factory[] factories)
+        public delegate void SampleEventHandler(string s);
+
+        public event SampleEventHandler Event;
+
+        public string ReadLine()
+        {
+            int number = 0;
+            string str = Console.ReadLine();
+            if(int.TryParse(str,out number))
+                Event?.Invoke($"Пользователь ввёл число {number} в время {DateTime.Now}"); ;
+
+            return str;
+
+        }
+
+
+
+
+
+    public  void SearchDialog(Unit[] units, Tank[] tanks, Factory[] factories)
         {
             Console.WriteLine("Доступные команды:");
 
@@ -56,7 +81,7 @@ namespace DataLib
                     Console.WriteLine("Введите название завода");
                     readLine = Console.ReadLine();
 
-                    Factory factory = DBManager.FindByName(factories, readLine);
+                    Factory factory = dbmanager.FindByName(factories, readLine);
 
 
                     if (factory != null)
@@ -77,7 +102,7 @@ namespace DataLib
                     Console.WriteLine("Введите название установки");
                     readLine = Console.ReadLine();
 
-                    Unit unit = DBManager.FindByName(units, readLine);
+                    Unit unit = dbmanager.FindByName(units, readLine);
 
                     if (unit != null)
                     {
@@ -96,7 +121,7 @@ namespace DataLib
                     Console.WriteLine("Введите название резервуара");
                     readLine = Console.ReadLine();
 
-                    Tank tank = DBManager.FindByName(tanks, readLine);
+                    Tank tank = dbmanager.FindByName(tanks, readLine);
 
                     if (tank != null)
                     {
@@ -112,10 +137,15 @@ namespace DataLib
                 Console.WriteLine("Совпадений не найдено");
         }
 
-        public static void Show(string[] str)
+        public  void Show(string[] str)
         {
             foreach (string s in str)
                 Console.WriteLine(s);
+        }
+
+        public void Show(string str)
+        {
+            Console.WriteLine(str);
         }
     }
 }

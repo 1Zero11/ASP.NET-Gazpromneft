@@ -14,43 +14,68 @@ namespace Lesson2.Controllers
     [ApiController]
     public class FactoryController : ControllerBase
     {
+        private readonly SerializationManager serialManager;
+        private readonly DBManager dBManager;
+        public FactoryController(SerializationManager smanager, DBManager dbmanager)
+        {
+            serialManager = smanager;
+            dBManager = dbmanager;
+        }
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<Factory[]> Get()
         {
-            string[] output = TextManager.Information();
+            //TextManager manager = new TextManager(dBManager);
+            //string[] output = manager.Information();
 
-            return output;
+            try
+            {
+                return dBManager.factories.ToArray();
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
-        public string Get(string name)
+        public ActionResult<Factory> Get(string name)
         {
-            return DBManager.FindByName(DBManager.factories, name).Description;
+            try
+            {
+                return dBManager.FindByName(dBManager.factories, name);
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e.Message);
+            }
+            
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Factory factory)
         {
-            DBManager.AddFactory(SerializationManager.Deserialise<Factory>(value)[0]);
-            SerializationManager.Serialize();
+            //DBManager.AddFactory(SerializationManager.Deserialise<Factory>(value)[0]);
+            dBManager.AddFactory(factory);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public Factory Put(int id, [FromBody] Factory factory)
         {
+            return dBManager.ChangeFactory(id, factory);
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
         public void Delete(string name)
         {
-            DBManager.DeleteFactory(name);
-            SerializationManager.Serialize();
+            dBManager.DeleteFactory(name);
+            serialManager.Serialize(dBManager.factories.ToArray());
         }
     }
 }

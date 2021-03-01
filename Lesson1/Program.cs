@@ -1,6 +1,7 @@
 ﻿using DataLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Lesson1
 {
@@ -8,47 +9,72 @@ namespace Lesson1
     {
         static void Main(string[] args)
         {
-            var tanks = DBManager.GetTanks();
-            var units = DBManager.GetUnits();
-            var factories = DBManager.GetFactories();
+            SerializationManager serializationManager = new SerializationManager();
+            DBManager dBManager = new DBManager();
+
+            var tanks = dBManager.GetTanks();
+            var units = dBManager.GetUnits();
+            var factories = dBManager.GetFactories();
+
+            TextManager textManager = new TextManager(dBManager);
+            textManager.Event += (str) => textManager.Show(new string[] { str });
 
             while (true) //Основной цикл
             {
-                Console.WriteLine("Доступные команды:");
 
-                Console.WriteLine("1) Вывести информацию");
-                Console.WriteLine("2) Создать json");
-                Console.WriteLine("3) Поиск");
-                Console.WriteLine("4) Выход");
-                Console.WriteLine();
+                textManager.Show("Доступные команды:");
 
-                Console.WriteLine("Введите номер команды");
-                string readLine = Console.ReadLine();
-                Console.WriteLine();
+                textManager.Show("1) Вывести информацию");
+                textManager.Show("2) Создать json");
+                textManager.Show("3) Поиск");
+                textManager.Show("4) Выход");
+                textManager.Show("");
 
-               
+                textManager.Show("Введите номер команды");
+
+                
+
+                string readLine = textManager.ReadLine();
+
+                textManager.Show("");
 
 
-                DBManager.Populate(); //Заполняем пустые объекты - создаём связи в обе стороны
 
+
+                dBManager.Populate(); //Заполняем пустые объекты - создаём связи в обе стороны
+
+                
 
                 if (readLine == "1")
                 {
-                    TextManager.Show(TextManager.Information());
+                    textManager.Show(textManager.Information());
                 }
                 else if (readLine == "2")
                 {
-                    SerializationManager.fileName = @".\bin\text.json";
-                    TextManager.Show(new string[] { SerializationManager.Serialize() });
+                    serializationManager.FileName = @".\text.json";
+                    try
+                    {
+                        textManager.Show(new string[] { serializationManager.Serialize(dBManager.factories.ToArray()) });
+                    }catch (NullReferenceException e)
+                    {
+                        textManager.Show(e.Message);
+                    }
                 }
                 else if (readLine == "3")
                 {
-                    TextManager.SearchDialog(units, tanks, factories);
+                    try
+                    {
+                        textManager.SearchDialog(units, tanks, factories);
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        textManager.Show(e.Message);
+                    }
                 }
                 if (readLine == "4")
                     break;
-                
-                Console.WriteLine();
+
+                textManager.Show("");
             }
             
         }

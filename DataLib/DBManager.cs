@@ -5,14 +5,14 @@ using DataLib.Models;
 
 namespace DataLib
 {
-    public static class DBManager
+    public class DBManager
     {
 
-        public static List<Factory> factories = new List<Factory>();
-        public static List<Unit> units = new List<Unit>();
-        public static List<Tank> tanks = new List<Tank>();
+        public  List<Factory> factories = new List<Factory>();
+        public  List<Unit> units = new List<Unit>();
+        public  List<Tank> tanks = new List<Tank>();
 
-        public static Tank[] GetTanks()
+        public Tank[] GetTanks()
         {
             // ваш код здесь
 
@@ -30,7 +30,7 @@ namespace DataLib
             return Tanks;
         }
 
-        public static Unit[] GetUnits()
+        public  Unit[] GetUnits()
         {
             // ваш код здесь
             Unit[] Units = new Unit[3];
@@ -44,7 +44,7 @@ namespace DataLib
             return Units;
         }
 
-        public static Factory[] GetFactories()
+        public  Factory[] GetFactories()
         {
             // ваш код здесь
             Factory[] Factories = new Factory[2];
@@ -58,7 +58,7 @@ namespace DataLib
         }
 
         // реализуйте этот метод, чтобы он возвращал объект завода, которому принадлежит установка
-        public static Factory FindFactory(Unit unit)
+        public  Factory FindFactory(Unit unit)
         {
             // ваш код здесь
 
@@ -66,7 +66,7 @@ namespace DataLib
         }
 
         // реализуйте этот метод, чтобы он возвращал суммарный объем резервуаров в массиве
-        public static int GetTotalVolume()
+        public  int GetTotalVolume()
         {
             // ваш код здесь
 
@@ -78,7 +78,7 @@ namespace DataLib
             return volume;
         }
 
-        public static void Populate()
+        public  void Populate()
         {
             //Для каждой фабрики создаём List и ищем установки, FactoryId которых совпадает с id этого завода. 
 
@@ -113,7 +113,7 @@ namespace DataLib
             }
         }
 
-        public static void UnloadToDB()
+        public  void UnloadToDB()
         {
             units.Clear();
             tanks.Clear();
@@ -140,7 +140,7 @@ namespace DataLib
             Populate();
         }
 
-        public static void ClearConnections()
+        public  void ClearConnections()
         {
             foreach (Factory factory in factories)
             {
@@ -159,35 +159,52 @@ namespace DataLib
             }
         }
 
-        public static T FindById<T>(IEnumerable<T> collection, int id) where T : Item
+        public T FindById<T>(IEnumerable<T> collection, int id) where T : Item
         {
+            if(collection == null)
+                throw new NullReferenceException("No collection");
+
             foreach (T item in collection)
                 if (item.Id == id)
                     return item;
             return default(T);
         }
 
-        public static T FindByName<T>(IEnumerable<T> collection, string name) where T : Item
+        public  T FindByName<T>(IEnumerable<T> collection, string name) where T : Item
         {
+            if (collection == null)
+                throw new NullReferenceException("No collection");
+
             foreach (T item in collection)
                 if (item.Name == name)
                     return item;
-            return default(T);
+
+            throw new InvalidOperationException($"Не найден объект с именем {name}");
+            //return default(T);
         }
 
 
 
-        public static void AddFactory(Factory factory)
+        public  void AddFactory(Factory factory)
         {
             factories.Add(factory);
         }
 
-        public static void ChangeFactory(string name, Factory factory)
+        public Factory ChangeFactory(int id, Factory factory)
         {
+            Factory foundFactory = FindById(factories, id);
 
+            foundFactory.Id = factory.Id;
+            foundFactory.Description = factory.Description;
+            foundFactory.Name = factory.Name;
+
+            ClearConnections();
+            Populate();
+
+            return foundFactory;
         }
 
-        public static void DeleteFactory(string name)
+        public  void DeleteFactory(string name)
         {
             Factory factory = FindByName(factories ,name);
             if(factory.Units!=null)
@@ -206,19 +223,31 @@ namespace DataLib
 
 
 
-        public static void AddTank(Tank tank)
+        public  void AddTank(Tank tank)
         {
             tanks.Add(tank);
             tank.Unit = FindById(units, tank.UnitId);
             tank.Unit.Tanks.Add(tank);
         }
 
-        public static void ChangeTank(string name, Factory factory)
+        public Tank ChangeTank(int id, Tank tank)
         {
+            Tank foundTank = FindById(tanks, id);
 
+            foundTank.Id = tank.Id;
+            foundTank.Volume = tank.Volume;
+            foundTank.Name = tank.Name;
+            foundTank.MaxVolume = tank.MaxVolume;
+            foundTank.UnitId = tank.UnitId;
+
+
+            ClearConnections();
+            Populate();
+
+            return foundTank;
         }
 
-        public static void DeleteTank(string name)
+        public  void DeleteTank(string name)
         {
             Tank tank = FindByName(tanks, name);
             tank.Unit.Tanks.Remove(tank);
@@ -229,7 +258,7 @@ namespace DataLib
             Populate();
         }
 
-        public static void AddUnit(Unit unit)
+        public  void AddUnit(Unit unit)
         {
             units.Add(unit);
             Factory factory = FindById(factories, unit.FactoryId);
@@ -237,12 +266,21 @@ namespace DataLib
             factory.Units.Add(unit);
         }
 
-        public static void ChangeUnit(string name, Factory factory)
+        public Unit ChangeUnit(int id, Unit unit)
         {
+            Unit foundUnit = FindById(units, id);
 
+            foundUnit.Id = unit.Id;
+            foundUnit.FactoryId = unit.FactoryId;
+            foundUnit.Name = unit.Name;
+
+            ClearConnections();
+            Populate();
+
+            return foundUnit;
         }
 
-        public static void DeleteUnit(string name)
+        public  void DeleteUnit(string name)
         {
             Unit unit = FindByName(units, name);
             if(unit.Tanks!=null)

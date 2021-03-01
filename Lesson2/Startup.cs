@@ -1,4 +1,5 @@
 using DataLib;
+using DataLib.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ namespace Lesson2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<SerializationManager>();
+            services.AddSingleton<DBManager>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -35,12 +38,12 @@ namespace Lesson2
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SerializationManager smanager, DBManager dbmanager)
         {
-            SerializationManager.fileName = @".\bin\Debug\net5.0\text.json";
-            DBManager.ClearConnections();
-            DBManager.factories.AddRange(SerializationManager.Deserialise<DataLib.Models.Factory>(SerializationManager.GetJsonFromFile()));
-            DBManager.UnloadToDB();
+            smanager.FileName = @".\bin\Debug\net5.0\text.json";
+
+            dbmanager.factories.AddRange(smanager.Deserialise<Factory>(smanager.GetJsonFromFile()));
+            dbmanager.UnloadToDB();
 
             if (env.IsDevelopment())
             {
