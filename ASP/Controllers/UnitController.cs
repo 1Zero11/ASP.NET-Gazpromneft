@@ -1,22 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataLib;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataLib;
 using DataLib.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Lesson2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FactoryController : ControllerBase
+    public class UnitController : ControllerBase
     {
+
         private readonly SerializationManager serialManager;
         private readonly DBManager dBManager;
-        public FactoryController(SerializationManager smanager, DBManager dbmanager)
+        public UnitController(SerializationManager smanager, DBManager dbmanager)
         {
             serialManager = smanager;
             dBManager = dbmanager;
@@ -24,28 +24,19 @@ namespace Lesson2.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public ActionResult<Factory[]> Get()
+        public IReadOnlyCollection<Unit> Get()
         {
-            //TextManager manager = new TextManager(dBManager);
-            //string[] output = manager.Information();
 
-            try
-            {
-                return dBManager.factories.ToArray();
-            }
-            catch (Exception e)
-            {
-                return NotFound(e.Message);
-            }
+            return dBManager.units.ToArray();
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
-        public ActionResult<Factory> Get(string name)
+        public ActionResult<Unit> Get(string name)
         {
             try
             {
-                return dBManager.FindByName(dBManager.factories, name);
+                return dBManager.FindByName(dBManager.units, name);
             }
             catch (InvalidOperationException e)
             {
@@ -56,25 +47,24 @@ namespace Lesson2.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] Factory factory)
+        public void Post([FromBody] Unit unit)
         {
-            //DBManager.AddFactory(SerializationManager.Deserialise<Factory>(value)[0]);
-            dBManager.AddFactory(factory);
+            dBManager.AddUnit(unit);
             serialManager.Serialize(dBManager.factories.ToArray());
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public Factory Put(int id, [FromBody] Factory factory)
+        public Unit Put(int id, [FromBody] Unit unit)
         {
-            return dBManager.ChangeFactory(id, factory);
+            return dBManager.ChangeUnit(id, unit);
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
         public void Delete(string name)
         {
-            dBManager.DeleteFactory(name);
+            dBManager.DeleteUnit(name);
             serialManager.Serialize(dBManager.factories.ToArray());
         }
     }

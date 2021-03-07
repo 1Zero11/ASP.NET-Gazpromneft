@@ -14,7 +14,7 @@ namespace DataLib
     {
         public string FileName;
 
-        public string Serialize(Factory[] factories)
+        public string Serialize(IReadOnlyCollection<Factory> factories)
         {
             //Пишем json в консоль и в файл
             var options = new JsonSerializerOptions

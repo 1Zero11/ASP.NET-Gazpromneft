@@ -20,7 +20,7 @@ namespace DataLib
             dbmanager = manager;
         }
 
-        public  string[] Information()
+        public  IList<string> Information()
         {
             List<string> output = new List<string>();
             output.Add($"Количество {dbmanager.tanks.Count} резервуаров"); // должно быть 
@@ -60,7 +60,7 @@ namespace DataLib
 
 
 
-    public  void SearchDialog(Unit[] units, Tank[] tanks, Factory[] factories)
+    public  void SearchDialog(IEnumerable<Unit> units, IEnumerable<Tank> tanks, IEnumerable<Factory> factories)
         {
             Console.WriteLine("Доступные команды:");
 
@@ -137,7 +137,7 @@ namespace DataLib
                 Console.WriteLine("Совпадений не найдено");
         }
 
-        public  void Show(string[] str)
+        public  void Show(IEnumerable<string> str)
         {
             foreach (string s in str)
                 Console.WriteLine(s);

@@ -11,12 +11,11 @@ namespace Lesson2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UnitController : ControllerBase
+    public class TankController : ControllerBase
     {
-
         private readonly SerializationManager serialManager;
         private readonly DBManager dBManager;
-        public UnitController(SerializationManager smanager, DBManager dbmanager)
+        public TankController(SerializationManager smanager, DBManager dbmanager)
         {
             serialManager = smanager;
             dBManager = dbmanager;
@@ -24,19 +23,19 @@ namespace Lesson2.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public Unit[] Get()
+        public IReadOnlyCollection<Tank> Get()
         {
 
-            return dBManager.units.ToArray();
+            return dBManager.tanks.ToArray();
         }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
-        public ActionResult<Unit> Get(string name)
+        public ActionResult<Tank> Get(string name)
         {
             try
             {
-                return dBManager.FindByName(dBManager.units, name);
+                return dBManager.FindByName(dBManager.tanks, name);
             }
             catch (InvalidOperationException e)
             {
@@ -47,24 +46,25 @@ namespace Lesson2.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] Unit unit)
+        public void Post([FromBody] Tank tank)
         {
-            dBManager.AddUnit(unit);
+            dBManager.AddTank(tank);
             serialManager.Serialize(dBManager.factories.ToArray());
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public Unit Put(int id, [FromBody] Unit unit)
+        public Tank Put(int id, [FromBody] Tank tank)
         {
-            return dBManager.ChangeUnit(id, unit);
+            return dBManager.ChangeTank(id, tank);
+
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
         public void Delete(string name)
         {
-            dBManager.DeleteUnit(name);
+            dBManager.DeleteTank(name);
             serialManager.Serialize(dBManager.factories.ToArray());
         }
     }

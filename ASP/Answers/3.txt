@@ -1,0 +1,16 @@
+﻿Как выбрать все записи со всеми столбцами из таблицы?
+Как посчитать количество записей в таблице, удовлетворяющих некоторому условию?
+Как выбрать данные сразу из нескольких столбцов, если записи объединены одним ключом? (LEFT JOIN, RIGHT JOIN, INNER JOIN)
+Как выбрать все значения таблицы, имеющие дубликаты по одному столбцу (HAVING)
+
+1. SELECT * FROM имя_таблицы
+2. SELECT COUNT(*) FROM имя_таблицы WHERE условие
+3. 
+4.                  (Для NorthWind) 
+    SELECT CustomerID, CustomerName, столбец_с_дубликатами 
+           FROM Customers
+           WHERE Country IN (SELECT Country
+                FROM Customers
+                GROUP BY Country
+                HAVING COUNT(*) > 1)
+           ORDER BY Country, CustomerID;

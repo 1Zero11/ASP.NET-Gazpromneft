@@ -12,7 +12,7 @@ namespace DataLib
         public  List<Unit> units = new List<Unit>();
         public  List<Tank> tanks = new List<Tank>();
 
-        public Tank[] GetTanks()
+        public IList<Tank> GetTanks()
         {
             // ваш код здесь
 
@@ -30,7 +30,7 @@ namespace DataLib
             return Tanks;
         }
 
-        public  Unit[] GetUnits()
+        public IList<Unit> GetUnits()
         {
             // ваш код здесь
             Unit[] Units = new Unit[3];
@@ -44,7 +44,7 @@ namespace DataLib
             return Units;
         }
 
-        public  Factory[] GetFactories()
+        public IList<Factory> GetFactories()
         {
             // ваш код здесь
             Factory[] Factories = new Factory[2];
