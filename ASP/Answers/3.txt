@@ -5,7 +5,9 @@
 
 1. SELECT * FROM имя_таблицы
 2. SELECT COUNT(*) FROM имя_таблицы WHERE условие
-3. 
+3. SELECT a.Ключ, b.Свойство, a.Свойство
+    FROM a
+    INNER JOIN b ON a.Ключ=b.Ключ;
 4.                  (Для NorthWind) 
     SELECT CustomerID, CustomerName, столбец_с_дубликатами 
            FROM Customers
