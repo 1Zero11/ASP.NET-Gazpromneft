@@ -6,9 +6,9 @@ using System.Text;
 
 namespace ASP.Data
 {
-    public class BookContext : DbContext
+    public class DataContext : DbContext
     {
-        public BookContext() : base("Gazprom")
+        public DataContext() : base("Gazprom")
         { }
         public DbSet<Factory> Factory { get; set; }
         public DbSet<Unit> Unit { get; set; }
