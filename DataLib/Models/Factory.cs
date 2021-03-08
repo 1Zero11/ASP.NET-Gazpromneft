@@ -18,8 +18,9 @@ namespace DataLib.Models
     public class Factory : Item
     {
         public string Description { get; set; }
-        public List<Unit> Units { get; set; }
 
+
+        
         public Factory(int id, string name, string description)
         {
             Id = id;
@@ -28,5 +29,7 @@ namespace DataLib.Models
         }
 
         public Factory() { }
+
+        public List<Unit> Units { get; set; }
     }
 }

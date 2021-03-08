@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataLib.Models;
+using ASP.Data;
 
 namespace Lesson2.Controllers
 {
@@ -16,27 +17,32 @@ namespace Lesson2.Controllers
 
         private readonly SerializationManager serialManager;
         private readonly DBManager dBManager;
+        private readonly SQLUnitRepository repository;
+
         public UnitController(SerializationManager smanager, DBManager dbmanager)
         {
             serialManager = smanager;
             dBManager = dbmanager;
+            repository = new SQLUnitRepository();
         }
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public IReadOnlyCollection<Unit> Get()
+        public IEnumerable<Unit> Get()
         {
 
-            return dBManager.units.ToArray();
+            //return dBManager.units.ToArray();
+            return repository.GetItemList();
         }
 
         // GET api/<ValuesController>/5
-        [HttpGet("{name}")]
-        public ActionResult<Unit> Get(string name)
+        [HttpGet("{id}")]
+        public ActionResult<Unit> Get(int id)
         {
             try
             {
-                return dBManager.FindByName(dBManager.units, name);
+                //return dBManager.FindByName(dBManager.units, name);
+                return repository.GetBook(id);
             }
             catch (InvalidOperationException e)
             {
@@ -49,23 +55,31 @@ namespace Lesson2.Controllers
         [HttpPost]
         public void Post([FromBody] Unit unit)
         {
+            /*
             dBManager.AddUnit(unit);
             serialManager.Serialize(dBManager.factories.ToArray());
+            */
+            repository.Create(unit);
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
         public Unit Put(int id, [FromBody] Unit unit)
         {
-            return dBManager.ChangeUnit(id, unit);
+            //return dBManager.ChangeUnit(id, unit);
+            repository.Update(unit);
+            return repository.GetBook(id);
         }
 
         // DELETE api/<ValuesController>/5
-        [HttpDelete("{name}")]
-        public void Delete(string name)
+        [HttpDelete("{id}")]
+        public void Delete(int id)
         {
+            /*
             dBManager.DeleteUnit(name);
             serialManager.Serialize(dBManager.factories.ToArray());
+            */
+            repository.Delete(id);
         }
     }
 }
