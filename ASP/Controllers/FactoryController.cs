@@ -47,7 +47,7 @@ namespace Lesson2.Controllers
             try
             {
                 //return dBManager.FindById(dBManager.factories, id);
-                return repository.GetBook(id);
+                return repository.GetItem(id);
 
             }
             catch (InvalidOperationException e)
@@ -75,7 +75,7 @@ namespace Lesson2.Controllers
         {
             //return dBManager.ChangeFactory(id, factory);
             repository.Update(factory);
-            return repository.GetBook(id);
+            return repository.GetItem(id);
         }
 
         // DELETE api/<ValuesController>/5

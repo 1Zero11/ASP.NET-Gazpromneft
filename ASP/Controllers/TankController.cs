@@ -41,7 +41,7 @@ namespace Lesson2.Controllers
             try
             {
                 //return dBManager.FindByName(dBManager.tanks, name);
-                return repository.GetBook(id);
+                return repository.GetItem(id);
             }
             catch (InvalidOperationException e)
             {
@@ -67,7 +67,7 @@ namespace Lesson2.Controllers
         {
             //return dBManager.ChangeTank(id, tank);
             repository.Update(tank);
-            return repository.GetBook(id);
+            return repository.GetItem(id);
         }
 
         // DELETE api/<ValuesController>/5

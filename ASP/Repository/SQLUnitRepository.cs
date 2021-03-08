@@ -8,11 +8,11 @@ namespace ASP.Data
 {
     public class SQLUnitRepository : IRepository<Unit>
     {
-        private BookContext db;
+        private DataContext db;
 
         public SQLUnitRepository()
         {
-            this.db = new BookContext();
+            this.db = new DataContext();
         }
 
         public IEnumerable<Unit> GetItemList()
@@ -20,7 +20,7 @@ namespace ASP.Data
             return db.Unit;
         }
 
-        public Unit GetBook(int id)
+        public Unit GetItem(int id)
         {
             return db.Unit.Find(id);
         }

@@ -8,11 +8,11 @@ namespace ASP.Data
 {
     public class SQLTankRepository : IRepository<Tank>
     {
-        private BookContext db;
+        private DataContext db;
 
         public SQLTankRepository()
         {
-            this.db = new BookContext();
+            this.db = new DataContext();
         }
 
         public IEnumerable<Tank> GetItemList()
@@ -20,7 +20,7 @@ namespace ASP.Data
             return db.Tank;
         }
 
-        public Tank GetBook(int id)
+        public Tank GetItem(int id)
         {
             return db.Tank.Find(id);
         }

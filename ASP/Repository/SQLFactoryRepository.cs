@@ -8,11 +8,11 @@ namespace ASP.Data
 {
     public class SQLFactoryRepository : IRepository<Factory>
     {
-        private BookContext db;
+        private DataContext db;
 
         public SQLFactoryRepository()
         {
-            this.db = new BookContext();
+            this.db = new DataContext();
         }
 
         public IEnumerable<Factory> GetItemList()
@@ -20,7 +20,7 @@ namespace ASP.Data
             return db.Factory;
         }
 
-        public Factory GetBook(int id)
+        public Factory GetItem(int id)
         {
             return db.Factory.Find(id);
         }

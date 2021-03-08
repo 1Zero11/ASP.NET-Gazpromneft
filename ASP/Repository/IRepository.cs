@@ -8,7 +8,7 @@ namespace ASP.Data
         where T : class
     {
         IEnumerable<T> GetItemList(); // получение всех объектов
-        T GetBook(int id); // получение одного объекта по id
+        T GetItem(int id); // получение одного объекта по id
         void Create(T item); // создание объекта
         void Update(T item); // обновление объекта
         void Delete(int id); // удаление объекта по id
